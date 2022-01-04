@@ -55,8 +55,14 @@ pipeline {
                     } 
                 }
                 script{
+                    try{
                     host_ip = "localhost:3000"
                     curlRun ("http://${host_ip}", 'http_code') 
+                    } catch (ex) {
+                        echo 'Err: Found failure in Container testing: ' + ex.toString()
+                        currentBuild.result = "FAILED"
+                        sh 'exit 1'
+                    }
                 }
             }
         }
